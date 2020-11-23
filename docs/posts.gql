@@ -1,0 +1,71 @@
+# Write your query or mutation here
+query GET_ALL_POSTS {
+  getAllPosts {
+    id
+    title
+    content
+    featuredImage
+    createdAt
+    updatedAt
+    author {
+      id
+      username
+      email
+    }
+  }
+}
+
+query GET_POST_BY_ID($id: ID!) {
+  getPostById(id: $id) {
+    id
+    title
+    content
+    featuredImage
+    createdAt
+    updatedAt
+    author {
+      id
+      username
+      email
+    }
+  }
+}
+
+mutation CREATE_NEW_POST(
+  $title: String!
+  $content: String!
+  $featuredImage: String
+) {
+  createNewPost(
+    newPost: { title: $title, content: $content, featuredImage: $featuredImage }
+  ) {
+    title
+    content
+    featuredImage
+    author {
+      id
+      firstName
+      lastName
+      username
+    }
+  }
+}
+
+mutation EDIT_POST_BY_ID($id: ID!, $updatedPost: PostInput!) {
+  editPostById(updatedPost: $updatedPost, id: $id) {
+    id
+    title
+    content
+    featuredImage
+    createdAt
+    updatedAt
+  }
+}
+
+mutation DELETE_POST_BY_ID($id: ID!) {
+  deletePostById(id: $id) {
+    id
+    message
+    success
+  }
+}
