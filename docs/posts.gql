@@ -15,6 +15,52 @@ query GET_ALL_POSTS {
   }
 }
 
+query GET_AUTHENTICATED_USERS_POST($page: Int, $limit: Int) {
+  getAuthenticatedUsersPost(page: $page, limit: $limit) {
+    paginator {
+      hasPrevPage
+      hasNextPage
+      prev
+      next
+      slNo
+      postCount
+      pageCount
+      perPage
+      currentPage
+    }
+    posts {
+      author {
+        username
+      }
+      title
+      content
+    }
+  }
+}
+
+query GET_POST_BY_LIMIT_AND_PAGE($page: Int, $limit: Int) {
+  getAuthenticatedUsersPost(page: $page, limit: $limit) {
+    paginator {
+      hasPrevPage
+      hasNextPage
+      prev
+      next
+      slNo
+      postCount
+      pageCount
+      perPage
+      currentPage
+    }
+    posts {
+      author {
+        username
+      }
+      title
+      content
+    }
+  }
+}
+
 query GET_POST_BY_ID($id: ID!) {
   getPostById(id: $id) {
     id
