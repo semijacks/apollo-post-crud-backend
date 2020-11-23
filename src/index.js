@@ -9,11 +9,40 @@ import * as AppModels from "./models";
 
 import express from "express";
 import mongoose from "mongoose";
+import bodyParser from "body-parser";
 
 //initialize the express application
 const app = express();
 app.use(AuthMiddleware);
+app.use(bodyParser.json());
 app.use(express.static(join(__dirname, "./uploads")));
+
+app.get("/posts", async (req, res) => {
+  let { Post } = AppModels;
+
+  let { page, limit } = req.query;
+
+  const myCustomLabels = {
+    totalDocs: "postCount",
+    docs: "posts",
+    limit: "perPage",
+    page: "currentPage",
+    nextPage: "next",
+    prevPage: "prev",
+    totalPages: "pageCount",
+    pagingCounter: "slNo",
+    meta: "paginator",
+  };
+
+  const options = {
+    page: page || 1,
+    limit: limit || 10,
+    customLabels: myCustomLabels,
+  };
+
+  let posts = await Post.paginate({}, options);
+  return res.send(posts);
+});
 
 const server = new ApolloServer({
   typeDefs,

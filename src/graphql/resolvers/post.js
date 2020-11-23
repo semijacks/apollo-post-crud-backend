@@ -5,6 +5,18 @@ import {
   editPostValidationRules,
 } from "../../validators";
 
+const myCustomLabels = {
+  totalDocs: "postCount",
+  docs: "posts",
+  limit: "perPage",
+  page: "currentPage",
+  nextPage: "next",
+  prevPage: "prev",
+  totalPages: "pageCount",
+  pagingCounter: "slNo",
+  meta: "paginator",
+};
+
 export default {
   Query: {
     getAllPosts: async (_, {}, { Post }) => {
@@ -22,6 +34,30 @@ export default {
       } catch (err) {
         throw new ApolloError(err.message);
       }
+    },
+    getPostsByLimitAndPage: async (_, { page, limit }, { Post }) => {
+      const options = {
+        page: page || 1,
+        limit: limit || 10,
+        sort: { createdAt: -1 },
+        populate: "author",
+        customLabels: myCustomLabels,
+      };
+
+      let posts = await Post.paginate({}, options);
+      return posts;
+    },
+    getAuthenticatedUsersPost: async (_, { page, limit }, { Post, user }) => {
+      const options = {
+        page: page || 1,
+        limit: limit || 10,
+        sort: { createdAt: -1 },
+        populate: "author",
+        customLabels: myCustomLabels,
+      };
+
+      let posts = await Post.paginate({ author: user._id.toString() }, options);
+      return posts;
     },
   },
   Mutation: {
